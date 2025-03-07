@@ -1,21 +1,26 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
+#include "SimpleFPS/Public/TitleWidget.h"
 
-#include "TitleWidget.h"
 #include "Components/Button.h"
 #include "Kismet/GameplayStatics.h"
 
-void UTitleWidget::NativeConstruct()
+void UTitleWidget::NativeOnInitialized()
 {
-	Super::NativeConstruct();
-
-	if (StartButton)
+	Super::NativeOnInitialized();
+	
+	GameStartButton = Cast<UButton>(GetWidgetFromName(TEXT("GameStartButton")));
+	
+	// Game Start 버튼을 찾고 클릭 시 이벤트 연결
+	if (GameStartButton)
 	{
-		StartButton->OnClicked.AddDynamic(this, &UTitleWidget::OnStartButtonClicked);
+		GameStartButton->OnClicked.AddDynamic(this, &UTitleWidget::OnGameStartButtonClicked);
 	}
 }
 
-void UTitleWidget::OnStartButtonClicked()
+void UTitleWidget::OnGameStartButtonClicked()
 {
-	UGameplayStatics::OpenLevel(this, FName("MainLevel"));
+	// "FirstPersonMap"으로 레벨 전환
+	UGameplayStatics::OpenLevel(GetWorld(), FName("FirstPersonMap"));
 }
+

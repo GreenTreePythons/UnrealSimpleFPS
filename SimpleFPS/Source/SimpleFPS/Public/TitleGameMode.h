@@ -3,16 +3,24 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/GameMode.h"
+#include "TitleWidget.h"
+#include "GameFramework/GameModeBase.h"
 #include "TitleGameMode.generated.h"
 
 UCLASS()
 class SIMPLEFPS_API ATitleGameMode : public AGameModeBase
 {
 	GENERATED_BODY()
-public:
-	ATitleGameMode();
-
+	
+protected:
+	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-
+	
+	ATitleGameMode();
+	
+public:
+	UPROPERTY(EditAnywhere, Category="UI");
+	TSubclassOf<UTitleWidget> TitleWidgetClass;
+	UPROPERTY()
+	UTitleWidget* TitleWidget;
 };

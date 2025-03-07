@@ -2,25 +2,32 @@
 
 
 #include "TitleGameMode.h"
-
+#include "TitleWidget.h"
+#include "UObject/ConstructorHelpers.h"
 #include "Blueprint/UserWidget.h"
-#include "Kismet/GameplayStatics.h"
 
-ATitleGameMode::ATitleGameMode() : Super()
+ATitleGameMode::ATitleGameMode()
 {
-	static ConstructorHelpers::FClassFinder<UUserWidget> TitleWidgetClass(TEXT("/Game/UI/WBP_Title"));
-	if (TitleWidgetClass.Succeeded())
+	static ConstructorHelpers::FClassFinder<UUserWidget> WBP_Title(TEXT("/Game/UMG/WBP_Title.WBP_Title_C"));
+	if (WBP_Title.Succeeded())
 	{
-		UUserWidget* TitleWidget = CreateWidget<UUserWidget>(GetWorld(), TitleWidgetClass.Class);
-
-		if (TitleWidget)
-		{
-			TitleWidget->AddToViewport();
-		}
+		TitleWidgetClass = WBP_Title.Class;
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("WBP_Title null"));
 	}
 }
 
 void ATitleGameMode::BeginPlay()
 {
-	
+	Super::BeginPlay();
+	if (IsValid(TitleWidgetClass))
+	{
+		TitleWidget = Cast<UTitleWidget>(CreateWidget(GetWorld(), TitleWidgetClass));
+		if (IsValid((TitleWidget)))
+		{
+			TitleWidget->AddToViewport();
+		}
+	}
 }

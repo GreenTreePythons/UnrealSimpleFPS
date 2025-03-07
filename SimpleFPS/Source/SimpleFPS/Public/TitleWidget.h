@@ -6,20 +6,19 @@
 #include "Blueprint/UserWidget.h"
 #include "TitleWidget.generated.h"
 
-/**
- * 
- */
 UCLASS()
 class SIMPLEFPS_API UTitleWidget : public UUserWidget
 {
 	GENERATED_BODY()
+	
 public:
-	UFUNCTION()
-	void OnStartButtonClicked();
+	UPROPERTY(Meta = (BindWidget))
+	class UButton* GameStartButton;  // 게임 시작 버튼
 
 protected:
-	UPROPERTY(meta = (BindWidget))
-	class UButton* StartButton;
+	virtual void NativeOnInitialized() override;
 
-	virtual void NativeConstruct() override;
+private:
+	UFUNCTION()
+	void OnGameStartButtonClicked();
 };
