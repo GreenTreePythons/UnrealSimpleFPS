@@ -100,3 +100,13 @@ void ASimpleFPSCharacter::Look(const FInputActionValue& Value)
 		AddControllerPitchInput(LookAxisVector.Y);
 	}
 }
+
+float ASimpleFPSCharacter::GetHealth()
+{
+	return  100.0f;
+}
+
+float ASimpleFPSCharacter::GetMaxHealth()
+{
+	return 100.0f;	
+}

@@ -49,6 +49,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category="Weapon")
 	void Fire();
 
+	int32 CurrentBulletCount;
+	int32 MaxBulletCount; 
+
 protected:
 	/** Ends gameplay for this component. */
 	UFUNCTION()

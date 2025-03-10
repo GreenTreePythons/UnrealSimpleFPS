@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "IngameWidget.h"
 #include "GameFramework/GameModeBase.h"
 #include "SimpleFPSGameMode.generated.h"
 
@@ -10,9 +11,20 @@ UCLASS(minimalapi)
 class ASimpleFPSGameMode : public AGameModeBase
 {
 	GENERATED_BODY()
+	
+protected:
+	// Called when the game starts or when spawned
+	virtual void BeginPlay() override;
+	
+	ASimpleFPSGameMode();	
 
 public:
-	ASimpleFPSGameMode();
+	// UPROPERTY(EditAnywhere, Category="UI");
+	// UPROPERTY()
+	TSubclassOf<UIngameWidget> InGameWidgetClass;
+	
+	UPROPERTY()
+	UIngameWidget* IngameWidget;
 };
 
 

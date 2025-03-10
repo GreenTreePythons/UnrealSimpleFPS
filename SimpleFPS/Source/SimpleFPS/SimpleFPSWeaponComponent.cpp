@@ -18,14 +18,19 @@ USimpleFPSWeaponComponent::USimpleFPSWeaponComponent()
 {
 	// Default offset from the character location for projectiles to spawn
 	MuzzleOffset = FVector(100.0f, 0.0f, 10.0f);
+	MaxBulletCount = 30;
 }
-
 
 void USimpleFPSWeaponComponent::Fire()
 {
 	if (Character == nullptr || Character->GetController() == nullptr)
 	{
 		return;
+	}
+
+	if (CurrentBulletCount == 0)
+	{
+		UE_LOG(LogTemp, Display, TEXT("not enough bullet"));
 	}
 
 	// Try and fire a projectile
@@ -45,6 +50,7 @@ void USimpleFPSWeaponComponent::Fire()
 	
 			// Spawn the projectile at the muzzle
 			World->SpawnActor<ASimpleFPSProjectile>(ProjectileClass, SpawnLocation, SpawnRotation, ActorSpawnParams);
+			CurrentBulletCount--;
 		}
 	}
 	
@@ -75,6 +81,8 @@ bool USimpleFPSWeaponComponent::AttachWeapon(ASimpleFPSCharacter* TargetCharacte
 	{
 		return false;
 	}
+	
+	CurrentBulletCount = 30;
 
 	// Attach the weapon to the First Person Character
 	FAttachmentTransformRules AttachmentRules(EAttachmentRule::SnapToTarget, true);

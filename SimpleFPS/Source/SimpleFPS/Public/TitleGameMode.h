@@ -16,11 +16,11 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 	
-	ATitleGameMode();
-	
+	ATitleGameMode();	
 public:
 	UPROPERTY(EditAnywhere, Category="UI");
 	TSubclassOf<UTitleWidget> TitleWidgetClass;
+	
 	UPROPERTY()
 	UTitleWidget* TitleWidget;
 };
