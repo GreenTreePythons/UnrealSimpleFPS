@@ -52,4 +52,7 @@ private:
 
 	UFUNCTION()
 	void OnWeaponChanged(USimpleFPSWeaponComponent* NewWeapon);
+
+	UFUNCTION()
+	void OnDropWeapon();
 };

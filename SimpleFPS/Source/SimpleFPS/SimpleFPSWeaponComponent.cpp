@@ -117,6 +117,20 @@ bool USimpleFPSWeaponComponent::AttachWeapon(ASimpleFPSCharacter* TargetCharacte
 	return true;
 }
 
+void USimpleFPSWeaponComponent::DettachWeapon()
+{
+	CurrentBulletCount = 0;
+	MaxBulletCount = 0;
+    
+	Character->OnWeaponDettached.Broadcast();
+
+	ASimpleFPSGameMode* GameMode = Cast<ASimpleFPSGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
+	GameMode->IngameWidget->RefreshBulletCount();
+
+	UE_LOG(LogTemp, Log, TEXT("Weapon detached successfully!"));
+}
+
+
 void USimpleFPSWeaponComponent::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
 	// ensure we have a character owner

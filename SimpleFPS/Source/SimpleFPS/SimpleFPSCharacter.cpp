@@ -37,6 +37,7 @@ ASimpleFPSCharacter::ASimpleFPSCharacter()
 	Mesh1P->SetRelativeLocation(FVector(-30.f, 0.f, -150.f));
 
 	OnWeaponAttached.AddDynamic(this, &ASimpleFPSCharacter::HandledWeaponAttached);
+	OnWeaponDettached.AddDynamic(this, &ASimpleFPSCharacter::HandledWeaponDettached);
 }
 
 //////////////////////////////////////////////////////////////////////////// Input
@@ -69,6 +70,8 @@ void ASimpleFPSCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInput
 
 		// Looking
 		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &ASimpleFPSCharacter::Look);
+
+		EnhancedInputComponent->BindAction(DropWeaponAction, ETriggerEvent::Triggered, this, &ASimpleFPSCharacter::DropWeapon);
 	}
 	else
 	{
@@ -103,6 +106,12 @@ void ASimpleFPSCharacter::Look(const FInputActionValue& Value)
 	}
 }
 
+void ASimpleFPSCharacter::DropWeapon(const FInputActionValue& Value)
+{
+	OnWeaponDettached.Broadcast();
+}
+
+
 float ASimpleFPSCharacter::GetHealth()
 {
 	return  100.0f;
@@ -116,4 +125,9 @@ float ASimpleFPSCharacter::GetMaxHealth()
 void ASimpleFPSCharacter::HandledWeaponAttached(USimpleFPSWeaponComponent* NewWeapon)
 {
 	UE_LOG(LogTemp, Error, TEXT("Weapon attached: %s"), *NewWeapon->GetName());
+}
+
+void ASimpleFPSCharacter::HandledWeaponDettached()
+{
+	UE_LOG(LogTemp, Error, TEXT("Weapon dettached"));
 }

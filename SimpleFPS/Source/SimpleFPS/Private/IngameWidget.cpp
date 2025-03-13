@@ -14,11 +14,21 @@ void UIngameWidget::NativeConstruct()
 	FPSCharacter = Cast<ASimpleFPSCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
 	TxtBulletCount = Cast<UTextBlock>(GetWidgetFromName(TEXT("TxtBulletCount")));
 	FPSCharacter->OnWeaponAttached.AddDynamic(this, &UIngameWidget::OnWeaponChanged);
+	FPSCharacter->OnWeaponDettached.AddDynamic(this, &UIngameWidget::OnDropWeapon);
+	RefreshBulletCount();
+}
+
+void UIngameWidget::OnDropWeapon()
+{
+	WeaponComponent = nullptr;
+	UE_LOG(LogTemp, Error, TEXT("OnDropWeapon ingame ui"));
+	RefreshBulletCount();
 }
 
 void UIngameWidget::OnWeaponChanged(USimpleFPSWeaponComponent* NewWeapon)
 {
 	WeaponComponent = NewWeapon;
+	UE_LOG(LogTemp, Error, TEXT("OnWeaponChanged ingame ui"));
 	RefreshBulletCount();
 }
 
@@ -33,6 +43,7 @@ void UIngameWidget::RefreshBulletCount()
 	if (!WeaponComponent) 
 	{
 		UE_LOG(LogTemp, Error, TEXT("WeaponComponent is null"));
+		TxtBulletCount->SetText(FText::FromString(TEXT("")));
 		return;
 	}
 

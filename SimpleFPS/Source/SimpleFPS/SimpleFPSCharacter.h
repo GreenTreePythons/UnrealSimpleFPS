@@ -16,6 +16,7 @@ struct FInputActionValue;
 
 DECLARE_LOG_CATEGORY_EXTERN(LogTemplateCharacter, Log, All);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnWeaponAttached, USimpleFPSWeaponComponent*, NewWeapon);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnWeaponDettached);
 
 UCLASS(config=Game)
 class ASimpleFPSCharacter : public ACharacter
@@ -45,6 +46,9 @@ class ASimpleFPSCharacter : public ACharacter
 	/** Look Input Action */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	class UInputAction* LookAction;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	class UInputAction* DropWeaponAction;
 	
 public:
 	ASimpleFPSCharacter();
@@ -55,6 +59,8 @@ protected:
 
 	/** Called for looking input */
 	void Look(const FInputActionValue& Value);
+
+	void DropWeapon(const FInputActionValue& Value);
 
 protected:
 	// APawn interface
@@ -71,8 +77,14 @@ public:
 	UPROPERTY(BlueprintAssignable, Category="Weapon")
 	FOnWeaponAttached OnWeaponAttached;
 
+	UPROPERTY(BlueprintAssignable, Category="Weapon")
+	FOnWeaponDettached OnWeaponDettached;
+
 	UFUNCTION()
 	void HandledWeaponAttached(USimpleFPSWeaponComponent* NewWeapon);
+
+	UFUNCTION()
+	void HandledWeaponDettached();
 	
 	float GetHealth();
 	float GetMaxHealth();
