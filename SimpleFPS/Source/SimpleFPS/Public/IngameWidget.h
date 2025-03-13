@@ -21,25 +21,26 @@ protected:
 	virtual void NativeConstruct() override;
 	
 public:
+
+	// UFUNCTION(BlueprintCallable)
+	// void UpdateBulletUI();
+
+	UPROPERTY(BlueprintAssignable, Category = "Events")
+	FOnBulletChanged OnBulletChanged;
+
+	UFUNCTION()
+	void RefreshBulletCount();
+
+	UFUNCTION()
+	void OnDamaged();
+	
+private:
 	UPROPERTY(Meta = (BindWidget))
 	class UProgressBar* HPBar;
 
 	UPROPERTY(Meta = (BindWidget))
 	class UTextBlock* TxtBulletCount;
-
-	UFUNCTION(BlueprintCallable)
-	void UpdateBulletUI();
-
-	UPROPERTY(BlueprintAssignable, Category = "Events")
-	FOnBulletChanged OnBulletChanged;
-
-private:
-	UFUNCTION()
-	void OnDamaged();
-
-	UFUNCTION()
-	FText CalculateBulletCount();
-
+	
 	UFUNCTION(BlueprintPure)
 	float CalculateHealthPercentage();
 
@@ -48,4 +49,7 @@ private:
 	
 	UPROPERTY()
 	USimpleFPSWeaponComponent* WeaponComponent;
+
+	UFUNCTION()
+	void OnWeaponChanged(USimpleFPSWeaponComponent* NewWeapon);
 };

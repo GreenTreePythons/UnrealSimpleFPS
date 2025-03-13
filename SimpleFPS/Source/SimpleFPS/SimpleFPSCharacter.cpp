@@ -9,6 +9,7 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "InputActionValue.h"
+#include "SimpleFPSWeaponComponent.h"
 #include "Engine/LocalPlayer.h"
 
 DEFINE_LOG_CATEGORY(LogTemplateCharacter);
@@ -35,6 +36,7 @@ ASimpleFPSCharacter::ASimpleFPSCharacter()
 	Mesh1P->CastShadow = false;
 	Mesh1P->SetRelativeLocation(FVector(-30.f, 0.f, -150.f));
 
+	OnWeaponAttached.AddDynamic(this, &ASimpleFPSCharacter::HandledWeaponAttached);
 }
 
 //////////////////////////////////////////////////////////////////////////// Input
@@ -109,4 +111,9 @@ float ASimpleFPSCharacter::GetHealth()
 float ASimpleFPSCharacter::GetMaxHealth()
 {
 	return 100.0f;	
+}
+
+void ASimpleFPSCharacter::HandledWeaponAttached(USimpleFPSWeaponComponent* NewWeapon)
+{
+	UE_LOG(LogTemp, Error, TEXT("Weapon attached: %s"), *NewWeapon->GetName());
 }

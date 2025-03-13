@@ -15,6 +15,7 @@ class UInputMappingContext;
 struct FInputActionValue;
 
 DECLARE_LOG_CATEGORY_EXTERN(LogTemplateCharacter, Log, All);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnWeaponAttached, USimpleFPSWeaponComponent*, NewWeapon);
 
 UCLASS(config=Game)
 class ASimpleFPSCharacter : public ACharacter
@@ -66,6 +67,13 @@ public:
 	USkeletalMeshComponent* GetMesh1P() const { return Mesh1P; }
 	/** Returns FirstPersonCameraComponent subobject **/
 	UCameraComponent* GetFirstPersonCameraComponent() const { return FirstPersonCameraComponent; }
+
+	UPROPERTY(BlueprintAssignable, Category="Weapon")
+	FOnWeaponAttached OnWeaponAttached;
+
+	UFUNCTION()
+	void HandledWeaponAttached(USimpleFPSWeaponComponent* NewWeapon);
+	
 	float GetHealth();
 	float GetMaxHealth();
 };

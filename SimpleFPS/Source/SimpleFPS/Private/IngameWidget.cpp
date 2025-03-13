@@ -12,7 +12,14 @@ void UIngameWidget::NativeConstruct()
 	Super::NativeConstruct();
 	HPBar = Cast<UProgressBar>(GetWidgetFromName(TEXT("HPBar")));
 	FPSCharacter = Cast<ASimpleFPSCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
-	WeaponComponent = Cast<USimpleFPSWeaponComponent>(GetWidgetFromName(TEXT("TxtBulletCount")));
+	TxtBulletCount = Cast<UTextBlock>(GetWidgetFromName(TEXT("TxtBulletCount")));
+	FPSCharacter->OnWeaponAttached.AddDynamic(this, &UIngameWidget::OnWeaponChanged);
+}
+
+void UIngameWidget::OnWeaponChanged(USimpleFPSWeaponComponent* NewWeapon)
+{
+	WeaponComponent = NewWeapon;
+	RefreshBulletCount();
 }
 
 float UIngameWidget::CalculateHealthPercentage()
@@ -21,22 +28,17 @@ float UIngameWidget::CalculateHealthPercentage()
 	return FPSCharacter->GetHealth() / FPSCharacter->GetMaxHealth();
 }
 
-FText UIngameWidget::CalculateBulletCount()
+void UIngameWidget::RefreshBulletCount()
 {
 	if (!WeaponComponent) 
 	{
-		return FText::FromString(TEXT("0/0"));
+		UE_LOG(LogTemp, Error, TEXT("WeaponComponent is null"));
+		return;
 	}
 
 	int32 currentBulletCount = WeaponComponent->CurrentBulletCount;
 	int32 maxBulletCount = WeaponComponent->MaxBulletCount;
-
-	if (maxBulletCount <= 0) 
-	{
-		return FText::FromString(TEXT("0/0"));
-	}
-
-	FText::FromString(FString::Printf(TEXT("%d/%d"), currentBulletCount, maxBulletCount));
+	TxtBulletCount->SetText(FText::FromString(FString::Printf(TEXT("%d/%d"), currentBulletCount, maxBulletCount)));
 }
 
 

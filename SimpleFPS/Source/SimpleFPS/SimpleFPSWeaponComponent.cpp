@@ -9,9 +9,12 @@
 #include "Kismet/GameplayStatics.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
+#include "IngameWidget.h"
+#include "SimpleFPSGameMode.h"
 #include "Animation/AnimInstance.h"
 #include "Engine/LocalPlayer.h"
 #include "Engine/World.h"
+#include "GameFramework/HUD.h"
 
 // Sets default values for this component's properties
 USimpleFPSWeaponComponent::USimpleFPSWeaponComponent()
@@ -31,6 +34,7 @@ void USimpleFPSWeaponComponent::Fire()
 	if (CurrentBulletCount == 0)
 	{
 		UE_LOG(LogTemp, Display, TEXT("not enough bullet"));
+		return;
 	}
 
 	// Try and fire a projectile
@@ -50,7 +54,10 @@ void USimpleFPSWeaponComponent::Fire()
 	
 			// Spawn the projectile at the muzzle
 			World->SpawnActor<ASimpleFPSProjectile>(ProjectileClass, SpawnLocation, SpawnRotation, ActorSpawnParams);
+			
 			CurrentBulletCount--;
+			ASimpleFPSGameMode* GameMode = Cast<ASimpleFPSGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
+			GameMode->IngameWidget->RefreshBulletCount();
 		}
 	}
 	
@@ -81,8 +88,9 @@ bool USimpleFPSWeaponComponent::AttachWeapon(ASimpleFPSCharacter* TargetCharacte
 	{
 		return false;
 	}
-	
+
 	CurrentBulletCount = 30;
+	UE_LOG(LogTemp, Error, TEXT("Current Bullet Count: %d"), CurrentBulletCount);
 
 	// Attach the weapon to the First Person Character
 	FAttachmentTransformRules AttachmentRules(EAttachmentRule::SnapToTarget, true);
@@ -103,6 +111,8 @@ bool USimpleFPSWeaponComponent::AttachWeapon(ASimpleFPSCharacter* TargetCharacte
 			EnhancedInputComponent->BindAction(FireAction, ETriggerEvent::Triggered, this, &USimpleFPSWeaponComponent::Fire);
 		}
 	}
+
+	Character->OnWeaponAttached.Broadcast(this);
 
 	return true;
 }
