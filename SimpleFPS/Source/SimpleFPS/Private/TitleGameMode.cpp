@@ -8,7 +8,7 @@
 
 ATitleGameMode::ATitleGameMode()
 {
-	static ConstructorHelpers::FClassFinder<UUserWidget> WBP_Title(TEXT("/Game/UMG/WBP_Title.WBP_Title_C"));
+	static ConstructorHelpers::FClassFinder<UUserWidget> WBP_Title(TEXT("/Game/UI/WBP_Title.WBP_Title_C"));
 	if (WBP_Title.Succeeded())
 	{
 		TitleWidgetClass = WBP_Title.Class;

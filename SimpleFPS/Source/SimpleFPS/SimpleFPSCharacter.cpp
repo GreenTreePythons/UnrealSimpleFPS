@@ -9,6 +9,7 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "InputActionValue.h"
+#include "SimpleFPSWeaponComponent.h"
 #include "Engine/LocalPlayer.h"
 
 DEFINE_LOG_CATEGORY(LogTemplateCharacter);
@@ -35,6 +36,8 @@ ASimpleFPSCharacter::ASimpleFPSCharacter()
 	Mesh1P->CastShadow = false;
 	Mesh1P->SetRelativeLocation(FVector(-30.f, 0.f, -150.f));
 
+	OnWeaponAttached.AddDynamic(this, &ASimpleFPSCharacter::HandledWeaponAttached);
+	OnWeaponDettached.AddDynamic(this, &ASimpleFPSCharacter::HandledWeaponDettached);
 }
 
 //////////////////////////////////////////////////////////////////////////// Input
@@ -67,6 +70,8 @@ void ASimpleFPSCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInput
 
 		// Looking
 		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &ASimpleFPSCharacter::Look);
+
+		EnhancedInputComponent->BindAction(DropWeaponAction, ETriggerEvent::Triggered, this, &ASimpleFPSCharacter::DropWeapon);
 	}
 	else
 	{
@@ -99,4 +104,30 @@ void ASimpleFPSCharacter::Look(const FInputActionValue& Value)
 		AddControllerYawInput(LookAxisVector.X);
 		AddControllerPitchInput(LookAxisVector.Y);
 	}
+}
+
+void ASimpleFPSCharacter::DropWeapon(const FInputActionValue& Value)
+{
+	OnWeaponDettached.Broadcast();
+}
+
+
+float ASimpleFPSCharacter::GetHealth()
+{
+	return  100.0f;
+}
+
+float ASimpleFPSCharacter::GetMaxHealth()
+{
+	return 100.0f;	
+}
+
+void ASimpleFPSCharacter::HandledWeaponAttached(USimpleFPSWeaponComponent* NewWeapon)
+{
+	UE_LOG(LogTemp, Error, TEXT("Weapon attached: %s"), *NewWeapon->GetName());
+}
+
+void ASimpleFPSCharacter::HandledWeaponDettached()
+{
+	UE_LOG(LogTemp, Error, TEXT("Weapon dettached"));
 }

@@ -45,9 +45,15 @@ public:
 	UFUNCTION(BlueprintCallable, Category="Weapon")
 	bool AttachWeapon(ASimpleFPSCharacter* TargetCharacter);
 
+	UFUNCTION(BlueprintCallable, Category="Weapon")
+	void DettachWeapon();
+
 	/** Make the weapon Fire a Projectile */
 	UFUNCTION(BlueprintCallable, Category="Weapon")
 	void Fire();
+
+	int32 CurrentBulletCount;
+	int32 MaxBulletCount; 
 
 protected:
 	/** Ends gameplay for this component. */

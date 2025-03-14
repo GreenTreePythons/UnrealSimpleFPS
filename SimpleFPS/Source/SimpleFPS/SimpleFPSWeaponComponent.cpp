@@ -9,6 +9,8 @@
 #include "Kismet/GameplayStatics.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
+#include "IngameWidget.h"
+#include "SimpleFPSGameMode.h"
 #include "Animation/AnimInstance.h"
 #include "Engine/LocalPlayer.h"
 #include "Engine/World.h"
@@ -18,13 +20,19 @@ USimpleFPSWeaponComponent::USimpleFPSWeaponComponent()
 {
 	// Default offset from the character location for projectiles to spawn
 	MuzzleOffset = FVector(100.0f, 0.0f, 10.0f);
+	MaxBulletCount = 30;
 }
-
 
 void USimpleFPSWeaponComponent::Fire()
 {
 	if (Character == nullptr || Character->GetController() == nullptr)
 	{
+		return;
+	}
+
+	if (CurrentBulletCount == 0)
+	{
+		UE_LOG(LogTemp, Display, TEXT("not enough bullet"));
 		return;
 	}
 
@@ -45,6 +53,10 @@ void USimpleFPSWeaponComponent::Fire()
 	
 			// Spawn the projectile at the muzzle
 			World->SpawnActor<ASimpleFPSProjectile>(ProjectileClass, SpawnLocation, SpawnRotation, ActorSpawnParams);
+			
+			CurrentBulletCount--;
+			ASimpleFPSGameMode* GameMode = Cast<ASimpleFPSGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
+			GameMode->IngameWidget->RefreshBulletCount();
 		}
 	}
 	
@@ -76,6 +88,9 @@ bool USimpleFPSWeaponComponent::AttachWeapon(ASimpleFPSCharacter* TargetCharacte
 		return false;
 	}
 
+	CurrentBulletCount = 30;
+	UE_LOG(LogTemp, Error, TEXT("Current Bullet Count: %d"), CurrentBulletCount);
+
 	// Attach the weapon to the First Person Character
 	FAttachmentTransformRules AttachmentRules(EAttachmentRule::SnapToTarget, true);
 	AttachToComponent(Character->GetMesh1P(), AttachmentRules, FName(TEXT("GripPoint")));
@@ -96,8 +111,24 @@ bool USimpleFPSWeaponComponent::AttachWeapon(ASimpleFPSCharacter* TargetCharacte
 		}
 	}
 
+	Character->OnWeaponAttached.Broadcast(this);
+
 	return true;
 }
+
+void USimpleFPSWeaponComponent::DettachWeapon()
+{
+	CurrentBulletCount = 0;
+	MaxBulletCount = 0;
+    
+	Character->OnWeaponDettached.Broadcast();
+
+	ASimpleFPSGameMode* GameMode = Cast<ASimpleFPSGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
+	GameMode->IngameWidget->RefreshBulletCount();
+
+	UE_LOG(LogTemp, Log, TEXT("Weapon detached successfully!"));
+}
+
 
 void USimpleFPSWeaponComponent::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {

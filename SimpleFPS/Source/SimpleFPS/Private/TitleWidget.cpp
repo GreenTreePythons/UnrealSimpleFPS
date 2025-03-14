@@ -9,12 +9,17 @@ void UTitleWidget::NativeOnInitialized()
 {
 	Super::NativeOnInitialized();
 	
-	GameStartButton = Cast<UButton>(GetWidgetFromName(TEXT("GameStartButton")));
-	
 	// Game Start 버튼을 찾고 클릭 시 이벤트 연결
+	GameStartButton = Cast<UButton>(GetWidgetFromName(TEXT("GameStartButton")));
 	if (GameStartButton)
 	{
 		GameStartButton->OnClicked.AddDynamic(this, &UTitleWidget::OnGameStartButtonClicked);
+	}
+
+	GameQuitButton = Cast<UButton>(GetWidgetFromName(TEXT("GameQuitButton")));
+	if (GameQuitButton)
+	{
+		GameQuitButton->OnClicked.AddDynamic(this, &UTitleWidget::OnGameQuitButtonClicked);
 	}
 }
 
@@ -24,3 +29,12 @@ void UTitleWidget::OnGameStartButtonClicked()
 	UGameplayStatics::OpenLevel(GetWorld(), FName("FirstPersonMap"));
 }
 
+void UTitleWidget::OnGameJoinButtonClicked()
+{
+	
+}
+
+void UTitleWidget::OnGameQuitButtonClicked()
+{
+	UKismetSystemLibrary::QuitGame(GetWorld(), nullptr, EQuitPreference::Quit, false);
+}
