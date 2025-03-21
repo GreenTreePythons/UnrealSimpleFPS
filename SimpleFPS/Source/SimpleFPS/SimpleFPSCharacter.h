@@ -27,6 +27,9 @@ class ASimpleFPSCharacter : public ACharacter
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Mesh, meta = (AllowPrivateAccess = "true"))
 	USkeletalMeshComponent* Mesh1P;
 
+	UPROPERTY()
+	USimpleFPSWeaponComponent* AttachedWeapon;
+
 	/** First person camera */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	UCameraComponent* FirstPersonCameraComponent;
@@ -78,13 +81,10 @@ public:
 	FOnWeaponAttached OnWeaponAttached;
 
 	UPROPERTY(BlueprintAssignable, Category="Weapon")
-	FOnWeaponDettached OnWeaponDettached;
+	FOnWeaponDettached OnWeaponDetached;
 
 	UFUNCTION()
 	void HandledWeaponAttached(USimpleFPSWeaponComponent* NewWeapon);
-
-	UFUNCTION()
-	void HandledWeaponDettached();
 	
 	float GetHealth();
 	float GetMaxHealth();

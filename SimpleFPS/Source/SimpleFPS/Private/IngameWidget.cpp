@@ -14,7 +14,7 @@ void UIngameWidget::NativeConstruct()
 	FPSCharacter = Cast<ASimpleFPSCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
 	TxtBulletCount = Cast<UTextBlock>(GetWidgetFromName(TEXT("TxtBulletCount")));
 	FPSCharacter->OnWeaponAttached.AddDynamic(this, &UIngameWidget::OnWeaponChanged);
-	FPSCharacter->OnWeaponDettached.AddDynamic(this, &UIngameWidget::OnDropWeapon);
+	FPSCharacter->OnWeaponDetached.AddDynamic(this, &UIngameWidget::OnDropWeapon);
 	RefreshBulletCount();
 }
 

@@ -118,17 +118,32 @@ bool USimpleFPSWeaponComponent::AttachWeapon(ASimpleFPSCharacter* TargetCharacte
 
 void USimpleFPSWeaponComponent::DettachWeapon()
 {
-	CurrentBulletCount = 0;
-	MaxBulletCount = 0;
-    
-	Character->OnWeaponDettached.Broadcast();
+	if (!Character) return;
 
-	ASimpleFPSGameMode* GameMode = Cast<ASimpleFPSGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
-	GameMode->IngameWidget->RefreshBulletCount();
+	//Detach
+	FDetachmentTransformRules DetachmentRules(EDetachmentRule::KeepWorld, true);
+	DetachFromComponent(DetachmentRules);
 
-	UE_LOG(LogTemp, Log, TEXT("Weapon detached successfully!"));
+	if (APlayerController* PlayerController = Cast<APlayerController>(Character->GetController()))
+	{
+		if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
+		{
+			Subsystem->RemoveMappingContext(FireMappingContext);
+		}
+
+		if (UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerController->InputComponent))
+		{
+			EnhancedInputComponent->ClearActionBindings();
+		}
+	}
+
+	Character->OnWeaponDetached.Broadcast();
+
+	SetSimulatePhysics(true);
+	SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+	
+	UE_LOG(LogTemp, Error, TEXT("Weapon detached successfully!"));
 }
-
 
 void USimpleFPSWeaponComponent::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
