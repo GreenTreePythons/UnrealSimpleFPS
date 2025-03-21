@@ -120,10 +120,28 @@ void USimpleFPSWeaponComponent::DettachWeapon()
 {
 	if (!Character) return;
 
-	//Detach
+	// Detach
 	FDetachmentTransformRules DetachmentRules(EDetachmentRule::KeepWorld, true);
 	DetachFromComponent(DetachmentRules);
 
+	SetSimulatePhysics(false);
+	
+	// set detached weapon dir
+	FVector ForwardOffset = Character->GetActorForwardVector() * 50.0f;  // 50 units in front
+	FVector ThrowStartLocation = GetComponentLocation() + ForwardOffset;
+	SetWorldLocation(ThrowStartLocation);
+	
+	// set physics simulate
+	SetSimulatePhysics(true);
+	SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+
+	FVector ThrowDirection = Character->GetControlRotation().Vector();
+	FVector PlayerVelocity = Character->GetVelocity();  // To add momentum
+	float ThrowStrength = 1200.0f;  // Adjust this for a smoother throw
+	FVector FinalThrowVelocity = (ThrowDirection * ThrowStrength) + (PlayerVelocity * 0.5f);
+	AddForce(FinalThrowVelocity * GetMass(), NAME_None, true);
+
+	// remove input context
 	if (APlayerController* PlayerController = Cast<APlayerController>(Character->GetController()))
 	{
 		if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
@@ -136,11 +154,6 @@ void USimpleFPSWeaponComponent::DettachWeapon()
 			EnhancedInputComponent->ClearActionBindings();
 		}
 	}
-
-	Character->OnWeaponDetached.Broadcast();
-
-	SetSimulatePhysics(true);
-	SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 	
 	UE_LOG(LogTemp, Error, TEXT("Weapon detached successfully!"));
 }

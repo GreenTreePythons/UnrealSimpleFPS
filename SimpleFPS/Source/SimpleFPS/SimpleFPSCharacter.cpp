@@ -112,6 +112,7 @@ void ASimpleFPSCharacter::DropWeapon(const FInputActionValue& Value)
 	if (AttachedWeapon == nullptr) return;
 	AttachedWeapon->DettachWeapon();
 	AttachedWeapon = nullptr;
+	OnWeaponDetached.Broadcast();
 }
 
 
