@@ -3,8 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "TitleWidget.h"
 #include "GameFramework/GameModeBase.h"
+#include "SimpleFPS/Widget/TitleWidget.h"
 #include "TitleGameMode.generated.h"
 
 UCLASS()

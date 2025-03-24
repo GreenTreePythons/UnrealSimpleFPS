@@ -1,6 +1,6 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-#include "SimpleFPS/Public/TitleWidget.h"
+#include "SimpleFPS/Widget//TitleWidget.h"
 
 #include "Components/Button.h"
 #include "Kismet/GameplayStatics.h"

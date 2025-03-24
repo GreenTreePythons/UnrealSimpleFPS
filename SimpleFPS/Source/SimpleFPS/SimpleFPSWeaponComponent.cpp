@@ -9,7 +9,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
-#include "IngameWidget.h"
+#include "SimpleFPS/Widget/IngameWidget.h"
 #include "SimpleFPSGameMode.h"
 #include "Animation/AnimInstance.h"
 #include "Engine/LocalPlayer.h"
@@ -55,8 +55,8 @@ void USimpleFPSWeaponComponent::Fire()
 			World->SpawnActor<ASimpleFPSProjectile>(ProjectileClass, SpawnLocation, SpawnRotation, ActorSpawnParams);
 			
 			CurrentBulletCount--;
-			ASimpleFPSGameMode* GameMode = Cast<ASimpleFPSGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
-			GameMode->IngameWidget->RefreshBulletCount();
+			// ASimpleFPSGameMode* GameMode = Cast<ASimpleFPSGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
+			// GameMode->IngameWidget->RefreshBulletCount();
 		}
 	}
 	

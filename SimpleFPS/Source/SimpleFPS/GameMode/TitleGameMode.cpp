@@ -1,8 +1,8 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "TitleGameMode.h"
-#include "TitleWidget.h"
+#include "SimpleFPS/GameMode/TitleGameMode.h"
+#include "SimpleFPS/Widget//TitleWidget.h"
 #include "UObject/ConstructorHelpers.h"
 #include "Blueprint/UserWidget.h"
 
