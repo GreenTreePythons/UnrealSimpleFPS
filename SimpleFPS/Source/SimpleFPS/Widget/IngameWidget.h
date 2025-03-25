@@ -33,6 +33,9 @@ public:
 
 	UFUNCTION()
 	void OnDamaged();
+
+	UFUNCTION()
+	void ShowEquipWeaponUI(bool bShow);
 	
 private:
 	UPROPERTY(Meta = (BindWidget))
@@ -40,6 +43,9 @@ private:
 
 	UPROPERTY(Meta = (BindWidget))
 	class UTextBlock* TxtBulletCount;
+
+	UPROPERTY(Meta = (BindWidget))
+	class UTextBlock* TxtEquipWeapon;
 	
 	UFUNCTION(BlueprintPure)
 	float CalculateHealthPercentage();

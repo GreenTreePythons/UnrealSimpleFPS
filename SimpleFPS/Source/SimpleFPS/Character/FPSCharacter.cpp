@@ -8,6 +8,7 @@
 #include "SimpleFPS/Weapon/BaseWeaponComponent.h"
 #include "InputMappingContext.h"
 #include "Components/CapsuleComponent.h"
+#include "SimpleFPS/GameMode/InGameMode.h"
 
 // Sets default values
 AFPSCharacter::AFPSCharacter()
@@ -75,6 +76,11 @@ void AFPSCharacter::BeginPlay()
 			}
 		}
 	}
+
+	if (AInGameMode* GameMode = Cast<AInGameMode>(GetWorld()->GetAuthGameMode()))
+	{
+		IngameWidget = GameMode->IngameWidget;
+	}
 	
 	static ConstructorHelpers::FObjectFinder<UInputAction> JumpActionFinder(TEXT("/Game/FirstPerson/Input/Actions/IA_Jump.IA_Jump"));
 	if (JumpActionFinder.Succeeded()) JumpAction = JumpActionFinder.Object;
@@ -90,6 +96,9 @@ void AFPSCharacter::BeginPlay()
 
 	static ConstructorHelpers::FObjectFinder<UInputAction> ShootActionFinder(TEXT("/Game/FirstPerson/Input/Actions/IA_Shoot.IA_Shoot"));
 	if (ShootActionFinder.Succeeded()) ShootAction = ShootActionFinder.Object;
+
+	// static  ConstructorHelpers::FObjectFinder<UInputAction> PickupWeaponActionFinder(TEXT("/Game/FirstPerson/Input/Actions/IA_PickupWeapon.IA_PickupWeapon"));
+	// if (PickupWeaponActionFinder.Succeeded()) PickupWeaponAction = PickupWeaponActionFinder.Object;
 
 	static ConstructorHelpers::FObjectFinder<UInputAction> DropWeaponActionFinder(TEXT("/Game/FirstPerson/Input/Actions/IA_DropWeapon.IA_DropWeapon"));
 	if (DropWeaponActionFinder.Succeeded()) DropWeaponAction = DropWeaponActionFinder.Object;
@@ -113,7 +122,9 @@ void AFPSCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
 		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Triggered, this, &AFPSCharacter::StartJump);
 		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &AFPSCharacter::StopJump);
 		EnhancedInputComponent->BindAction(DashAction, ETriggerEvent::Triggered, this, &AFPSCharacter::StartDash);
-		EnhancedInputComponent->BindAction(PikcupWeaponAction, ETriggerEvent::Triggered, this, &AFPSCharacter::PickupWeapon);
+		EnhancedInputComponent->BindAction(ShootAction, ETriggerEvent::Triggered, this, &AFPSCharacter::StartDash);
+		EnhancedInputComponent->BindAction(PickupWeaponAction, ETriggerEvent::Triggered, this, &AFPSCharacter::PickupWeapon);
+		EnhancedInputComponent->BindAction(ShootAction, ETriggerEvent::Triggered, this, &AFPSCharacter::Shoot);
 	}
 }
 
@@ -124,7 +135,12 @@ void AFPSCharacter::EquipWeapon(UBaseWeaponComponent* NewWeapon)
 
 void AFPSCharacter::SetNearbyWeapon(UBaseWeaponComponent* Weapon)
 {
+	UE_LOG(LogTemp, Error, TEXT("near weapon updated"));
 	NearbyWeapon = Weapon;
+	if (IngameWidget)
+	{
+		IngameWidget->ShowEquipWeaponUI(Weapon != nullptr);
+	}
 }
 
 const FWeaponData* AFPSCharacter::GetWeaponData()
@@ -194,9 +210,16 @@ void AFPSCharacter::PickupWeapon()
 
 void AFPSCharacter::DropWeapon()
 {
-	
+	if (!EquipedWeapon) return;
+	EquipedWeapon->DropWeapon();
+	EquipedWeapon = nullptr;
 }
 
+void AFPSCharacter::Shoot()
+{
+	if (!EquipedWeapon) return;
+	EquipedWeapon->Fire();
+}
 
 
 

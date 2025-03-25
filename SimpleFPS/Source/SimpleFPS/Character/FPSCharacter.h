@@ -9,6 +9,7 @@
 
 struct FWeaponData;
 class UBaseWeaponComponent;
+class UIngameWidget;
 
 #include "FPSCharacter.generated.h"
 
@@ -53,7 +54,7 @@ private:
 	class UInputAction* ShootAction;
 
 	UPROPERTY(EditAnywhere, Category=Input)
-	class UInputAction* PikcupWeaponAction;
+	class UInputAction* PickupWeaponAction;
 	
 	UPROPERTY(EditAnywhere, Category=Input)
 	class UInputAction* DropWeaponAction;
@@ -76,7 +77,9 @@ private:
 	void DropWeapon();
 	void StartDash();
 	void StopDash();
+	void Shoot();
 	
 	UBaseWeaponComponent* EquipedWeapon;
 	UBaseWeaponComponent* NearbyWeapon;
+	UIngameWidget* IngameWidget;
 };

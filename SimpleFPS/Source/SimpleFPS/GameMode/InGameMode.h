@@ -16,8 +16,9 @@ protected:
 	
 public:
 	AInGameMode();
-		TSubclassOf<UIngameWidget> InGameWidgetClass;
-		
-		UPROPERTY()
-		UIngameWidget* IngameWidget;
+
+	TSubclassOf<UIngameWidget> InGameWidgetClass;
+
+	UPROPERTY()
+	UIngameWidget* IngameWidget;
 };

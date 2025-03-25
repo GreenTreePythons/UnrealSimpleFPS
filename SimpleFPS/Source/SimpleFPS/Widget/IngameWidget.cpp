@@ -57,3 +57,9 @@ void UIngameWidget::OnDamaged()
 {
 		
 }
+
+void UIngameWidget::ShowEquipWeaponUI(bool bShow)
+{
+	if (!TxtEquipWeapon) return;
+	TxtEquipWeapon->SetVisibility(bShow ? ESlateVisibility::Visible : ESlateVisibility::Hidden);
+}
