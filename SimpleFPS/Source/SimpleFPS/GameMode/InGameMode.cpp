@@ -29,6 +29,7 @@ void AInGameMode::BeginPlay()
 		if (IsValid((IngameWidget)))
 		{
 			IngameWidget->AddToViewport();
+			IngameWidget->ShowEquipWeaponUI(false);
 		}
 	}
 }
