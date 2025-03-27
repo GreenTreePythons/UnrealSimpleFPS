@@ -22,7 +22,7 @@ AFPSCharacter::AFPSCharacter()
 	DashSpeed = 1200.0f;
 	bIsDashing = false;
 	
-	GetCapsuleComponent()->InitCapsuleSize(55.f, 96.0f);
+	GetCapsuleComponent()->InitCapsuleSize(25.f, 96.0f);
 
 	BodyMesh = GetMesh();
 	BodyMesh->SetupAttachment(GetCapsuleComponent());
@@ -97,8 +97,8 @@ void AFPSCharacter::BeginPlay()
 	static ConstructorHelpers::FObjectFinder<UInputAction> ShootActionFinder(TEXT("/Game/FirstPerson/Input/Actions/IA_Shoot.IA_Shoot"));
 	if (ShootActionFinder.Succeeded()) ShootAction = ShootActionFinder.Object;
 
-	// static  ConstructorHelpers::FObjectFinder<UInputAction> PickupWeaponActionFinder(TEXT("/Game/FirstPerson/Input/Actions/IA_PickupWeapon.IA_PickupWeapon"));
-	// if (PickupWeaponActionFinder.Succeeded()) PickupWeaponAction = PickupWeaponActionFinder.Object;
+	static  ConstructorHelpers::FObjectFinder<UInputAction> PickupWeaponActionFinder(TEXT("/Game/FirstPerson/Input/Actions/IA_PickupWeapon.IA_PickupWeapon"));
+	if (PickupWeaponActionFinder.Succeeded()) PickupWeaponAction = PickupWeaponActionFinder.Object;
 
 	static ConstructorHelpers::FObjectFinder<UInputAction> DropWeaponActionFinder(TEXT("/Game/FirstPerson/Input/Actions/IA_DropWeapon.IA_DropWeapon"));
 	if (DropWeaponActionFinder.Succeeded()) DropWeaponAction = DropWeaponActionFinder.Object;
@@ -141,6 +141,11 @@ void AFPSCharacter::SetNearbyWeapon(UBaseWeaponComponent* Weapon)
 	{
 		IngameWidget->ShowEquipWeaponUI(Weapon != nullptr);
 	}
+}
+
+UBaseWeaponComponent* AFPSCharacter::GetNearbyWeapon()
+{
+	return NearbyWeapon;
 }
 
 const FWeaponData* AFPSCharacter::GetWeaponData()

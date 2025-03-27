@@ -35,6 +35,7 @@ public:
 
 	void EquipWeapon(UBaseWeaponComponent* NewWeapon);
 	void SetNearbyWeapon(UBaseWeaponComponent* Weapon);
+	UBaseWeaponComponent* GetNearbyWeapon();
 	const FWeaponData* GetWeaponData();
 	
 private:

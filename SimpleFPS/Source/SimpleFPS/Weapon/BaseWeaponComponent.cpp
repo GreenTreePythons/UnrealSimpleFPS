@@ -1,6 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "BaseWeaponComponent.h"
+
 #include "SimpleFPS/Character/FPSCharacter.h"
 
 UBaseWeaponComponent::UBaseWeaponComponent()
@@ -9,9 +10,7 @@ UBaseWeaponComponent::UBaseWeaponComponent()
 	WeaponData.FireRate = 0.1f;
 	WeaponData.AmmoCapacity = 30;
 	WeaponData.WeaponName = "Default";
-
-	OnComponentBeginOverlap.AddDynamic(this, &UBaseWeaponComponent::OnWeaponBeginOverlap);
-	OnComponentEndOverlap.AddDynamic(this, &UBaseWeaponComponent::OnWeaponEndOverlap);
+	WeaponData.CollisionRadius = 100.0f;
 
 	Character = nullptr;
 }
@@ -45,27 +44,6 @@ void UBaseWeaponComponent::PickupWeapon(class AFPSCharacter* NewOwner)
 void UBaseWeaponComponent::DropWeapon()
 {
 	
-}
-
-void UBaseWeaponComponent::OnWeaponBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
-												UPrimitiveComponent* OtherComp, int32 OtherBodyIndex,
-												bool bFromSweep, const FHitResult& SweepResult)
-{
-	AFPSCharacter* PlayerCharacter = Cast<AFPSCharacter>(OtherActor);
-	if (PlayerCharacter)
-	{
-		PlayerCharacter->SetNearbyWeapon(this);
-	}
-}
-
-void UBaseWeaponComponent::OnWeaponEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
-											  UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
-{
-	AFPSCharacter* PlayerCharacter = Cast<AFPSCharacter>(OtherActor);
-	if (PlayerCharacter)
-	{
-		PlayerCharacter->SetNearbyWeapon(nullptr);
-	}
 }
 
 const FWeaponData& UBaseWeaponComponent::GetWeaponData() const

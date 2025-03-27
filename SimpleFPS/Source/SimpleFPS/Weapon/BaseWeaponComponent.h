@@ -25,6 +25,9 @@ struct FWeaponData
 
 	UPROPERTY()
 	FString WeaponName;
+
+	UPROPERTY()
+	float CollisionRadius;
 };
 
 UCLASS()
@@ -43,18 +46,11 @@ public:
 	virtual void PickupWeapon(class AFPSCharacter* NewOwner);
 	virtual void DropWeapon();
 	
+private:
+	UPROPERTY()
+	FWeaponData WeaponData;
+	
 protected:
 	virtual void BeginPlay() override;
 	
-	UPROPERTY()
-	FWeaponData WeaponData;
-
-	UFUNCTION()
-	void OnWeaponBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
-							  UPrimitiveComponent* OtherComp, int32 OtherBodyIndex,
-							  bool bFromSweep, const FHitResult& SweepResult);
-
-	UFUNCTION()
-	void OnWeaponEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
-							UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 };
